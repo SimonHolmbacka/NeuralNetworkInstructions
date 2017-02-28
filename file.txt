@@ -1,0 +1,10 @@
+movw    r4, #14832      ; 0x39f0
+movt    r4, #6
+movw    lr, #36969      ; 0x9069
+movw    r7, #18000      ; 0x4650
+movs    r2, #0
+ldr     r1, [r4, #4]
+ldr     r5, [r4, #0]
+uxth    r6, r1
+lsrs    r0, r1, #16
+uxth    r1, r5

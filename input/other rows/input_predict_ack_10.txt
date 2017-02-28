@@ -1,0 +1,10 @@
+mov
+cmp
+bne.n
+adds
+pop
+subs
+mov
+cmp
+bne.n
+adds

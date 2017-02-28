@@ -1,0 +1,5 @@
+bne.n
+vcmp.f64
+vmrs
+bne.n
+vsub.f64
