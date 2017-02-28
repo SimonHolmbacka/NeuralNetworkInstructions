@@ -20,45 +20,45 @@ from scikits.statsmodels.api import categorical
 numpy.random.seed(7)
 
 #Original training set begin
-p_ack_a15 = 1.35
-p_ack_a7 = 0.73
-perf_ack = 2.026
+p_ack_a15 = 4.04
+p_ack_a7 = 3.11
+perf_ack = 1.44
 
-p_i32d_a15 = 1.65
-p_i32d_a7 = 0.595
-perf_i32d = 1.64
+p_i32d_a15 = 4.49
+p_i32d_a7 = 3.01
+perf_i32d = 0.47
 
-p_ln2_a15 = 0.92
-p_ln2_a7 = 0.319
-perf_ln2 = 1.343
+p_ln2_a15 = 3.86
+p_ln2_a7 = 2.87
+perf_ln2 = 0.91
 
-p_cdb_a15 = 1.82
-p_cdb_a7 = 0.53
-perf_cdb = 0.513
+p_cdb_a15 = 4.47
+p_cdb_a7 = 2.98
+perf_cdb = 0.38
 
-p_call_a15 = 1.68
-p_call_a7 = 0.897
-perf_call = 1.297
+p_call_a15 = 4.46
+p_call_a7 = 3.26
+perf_call = 0.78
 
-p_dit_a15 = 1.89
-p_dit_a7 = 0.568
-perf_dit = 0.878
+p_dit_a15 = 4.76
+p_dit_a7 = 3.22
+perf_dit = 0.35
 
-p_eul_a15 = 1.12
-p_eul_a7 = 0.345
-perf_eul = 0.752
+p_eul_a15 = 4.01
+p_eul_a7 = 2.90
+perf_eul = 0.50
 
-p_fib_a15 = 1.39
-p_fib_a7 = 0.612
-perf_fib = 1.210
+p_fib_a15 = 4.23
+p_fib_a7 = 3.08
+perf_fib = 0.81
 
-p_gam_a15 = 1.71
-p_gam_a7 = 0.556
-perf_gam = 0.686
+p_gam_a15 = 4.39
+p_gam_a7 = 3.01
+perf_gam = 0.50
 
-p_i32f_a15 = 2.08
-p_i32f_a7 = 0.664
-perf_i32f = 0.770
+p_i32f_a15 = 4.49
+p_i32f_a7 = 3.03
+perf_i32f = 0.58
 #Original training set end
 
 total_error = 0
@@ -72,10 +72,10 @@ def column(matrix, i):
 #Dictionary for instructions
 X_Dictionary_str = numpy.genfromtxt("input/input_Dict.csv",dtype=str)
 #The training set
-X_train_str = numpy.genfromtxt("input/input_instructionsTRAIN15.csv",dtype=str,delimiter=',')
+X_train_str = numpy.genfromtxt("input/input_instructionsTRAIN16.csv",dtype=str,delimiter=',')
 X_train_str = X_train_str.transpose()
 #The target set
-Y_train = numpy.loadtxt("input/input_power_train15.csv", delimiter=",")
+Y_train = numpy.loadtxt("input/input_power_train16.csv", delimiter=",")
 #The test set
 X_test_str = numpy.genfromtxt("input/input_instructionsTEST.csv", dtype=str,delimiter=',')
 X_test_str = X_test_str.transpose()
@@ -83,7 +83,7 @@ X_test_str = X_test_str.transpose()
 Y_test = numpy.loadtxt("input/input_power_test.csv", delimiter=",")
 
 #Number of applications used for training
-napps = 15
+napps = 16
 ntestapps = 10
 seqlen = 2000
 
@@ -116,25 +116,25 @@ for i in range(0,ntestapps):
 #X_train = numpy.reshape(X_train,(10,2000))
 #X_test = pad_sequences([X_test], maxlen=20000, dtype='float32')
 #X_test = numpy.reshape(X_test,(10,2000))
-
+#Made a change here
 
 max_len = seqlen
 batch_size = 1
 member_berries = 100
 dropout = 0.1
 rows = 2000 #100 gives 368% error 30 gives 516% error
-epoch = 25 #30 gives almost perfect
+epoch = 20 #30 gives almost perfect
 load_old_model = 1
 
 
 #Choose to make a new model (will take some time)
 if load_old_model == 0:
     input_layer = Input(shape=(max_len,))
-    emb_layer = Embedding(len(X_Dictionary), 2000, input_length=max_len)(input_layer)
+    emb_layer = Embedding(len(X_Dictionary), 1500, input_length=max_len)(input_layer)
     lstm_layer = LSTM(member_berries,go_backwards=False, dropout_W=dropout)(emb_layer)
     output_layer = Dense(3, init='glorot_normal', activation='softplus')(lstm_layer)
     model = Model(input=input_layer, output=output_layer)
-    opt = optimizers.Adam(lr=0.0001)
+    opt = optimizers.Adam(lr=0.001)
     model.compile(loss='mse',optimizer=opt) #mse adam
     model.fit(X_train, Y_train, batch_size=batch_size, nb_epoch=epoch, validation_data=(X_test, Y_test))
     #model.fit(X_train, Y_train, batch_size=batch_size, nb_epoch=epoch, validation_split=0.1)
